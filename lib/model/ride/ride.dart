@@ -1,4 +1,5 @@
 import 'package:week_3_blabla_project/model/ride/locations.dart';
+import 'package:week_3_blabla_project/model/ride/rides_filter.dart';
 
 import '../../utils/date_time_util.dart';
 import '../user/user.dart';
@@ -24,6 +25,7 @@ class Ride {
 
   final int availableSeats;
   final double pricePerSeat;
+  final bool petAccepted;
 
   RideStatus status = RideStatus.created;
 
@@ -37,6 +39,8 @@ class Ride {
     required this.driver,
     required this.availableSeats,
     required this.pricePerSeat,
+    this.petAccepted = false,
+
   });
 
   void addPassenger(User passenger) {
