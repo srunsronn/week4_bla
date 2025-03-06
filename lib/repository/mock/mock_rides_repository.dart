@@ -1,5 +1,6 @@
 import 'package:week_3_blabla_project/model/ride/locations.dart';
 import 'package:week_3_blabla_project/model/ride/ride.dart';
+import 'package:week_3_blabla_project/model/ride/ride_sort_type.dart';
 import 'package:week_3_blabla_project/model/ride/rides_filter.dart';
 import 'package:week_3_blabla_project/model/ride_pref/ride_pref.dart';
 import 'package:week_3_blabla_project/repository/rides_repository.dart';
@@ -98,8 +99,9 @@ class MockRidesRepository extends RidesRepository {
   }
 
   @override
-  List<Ride> getRides(RidePreference preference, RidesFilter? filter) {
-    return _allRides
+  List<Ride> getRides(
+      RidePreference preference, RidesFilter? filter, RideSortType? sortType) {
+    List<Ride> filteredRides = _allRides
         .where((ride) =>
             // Filter on departure / arrival
             ride.departureLocation == preference.departure &&
@@ -111,5 +113,19 @@ class MockRidesRepository extends RidesRepository {
             // Filter on ride with available seats only
             ride.availableSeats > 0)
         .toList();
+
+    if (sortType != null) {
+      filteredRides.sort((a, b) {
+        switch (sortType) {
+          case RideSortType.price:
+            return a.pricePerSeat.compareTo(b.pricePerSeat);
+          case RideSortType.departureTime:
+            return a.departureDate.compareTo(b.departureDate);
+          case RideSortType.arrivalTime:
+            return a.arrivalDateTime.compareTo(b.arrivalDateTime);
+        }
+      });
+    }
+    return filteredRides;
   }
 }
