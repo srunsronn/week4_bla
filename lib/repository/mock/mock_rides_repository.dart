@@ -101,31 +101,39 @@ class MockRidesRepository extends RidesRepository {
   @override
   List<Ride> getRides(
       RidePreference preference, RidesFilter? filter, RideSortType? sortType) {
-    List<Ride> filteredRides = _allRides
-        .where((ride) =>
-            // Filter on departure / arrival
-            ride.departureLocation == preference.departure &&
-            ride.arrivalLocation == preference.arrival &&
+    List<Ride> filteredRides = _allRides.where((ride) {
+      // Check if the ride has enough seats for the requested passengers
+      if (ride.availableSeats < preference.requestedSeats) {
+        return false;
+      }
 
-            // filter on pet
-            (filter != null && filter.petAccepted ? ride.petAccepted : true) &&
+      // Check for pet filter
+      if (filter != null && filter.petAccepted && !ride.petAccepted) {
+        return false;
+      }
 
-            // Filter on ride with available seats only
-            ride.availableSeats > 0)
-        .toList();
+      // Check for matching locations
+      return ride.departureLocation == preference.departure &&
+          ride.arrivalLocation == preference.arrival;
+    }).toList();
 
     if (sortType != null) {
-      filteredRides.sort((a, b) {
-        switch (sortType) {
-          case RideSortType.price:
-            return a.pricePerSeat.compareTo(b.pricePerSeat);
-          case RideSortType.departureTime:
-            return a.departureDate.compareTo(b.departureDate);
-          case RideSortType.arrivalTime:
-            return a.arrivalDateTime.compareTo(b.arrivalDateTime);
-        }
-      });
+      switch (sortType) {
+        case RideSortType.departureTime:
+          filteredRides
+              .sort((a, b) => a.departureDate.compareTo(b.departureDate));
+          break;
+        case RideSortType.price:
+          filteredRides
+              .sort((a, b) => a.pricePerSeat.compareTo(b.pricePerSeat));
+          break;
+        case RideSortType.arrivalTime:
+          filteredRides
+              .sort((a, b) => a.arrivalDateTime.compareTo(b.arrivalDateTime));
+          break;
+      }
     }
+
     return filteredRides;
   }
 }

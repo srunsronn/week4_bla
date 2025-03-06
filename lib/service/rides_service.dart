@@ -11,7 +11,6 @@ import '../model/ride/ride.dart';
 ///   - The list of available rides
 ///
 class RidesService {
-
   //private instance of the service
   static RidesService? _instance;
 
@@ -38,8 +37,8 @@ class RidesService {
     return _instance!;
   }
 
-  List<Ride> getRidesFor(RidePreference preference, RidesFilter? filter, RideSortType? sortType) {
+  List<Ride> getRides(
+      RidePreference preference, RidesFilter? filter, RideSortType? sortType) {
     return repository.getRides(preference, filter, sortType);
   }
- 
 }

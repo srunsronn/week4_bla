@@ -28,7 +28,7 @@ RidePreference get currentPreference => RidePrefService.instance.currentPreferen
 
 RidesFilter currentFilter = RidesFilter();
 
-List<Ride> get matchingRides => RidesService.instance.getRidesFor(currentPreference, currentFilter);
+List<Ride> get matchingRides => RidesService.instance.getRides(currentPreference, currentFilter, null);
 
   void onBackPressed() {
     Navigator.of(context).pop();     //  Back to the previous view

@@ -17,4 +17,9 @@ class User {
       required this.phone,
       required this.profilePicture,
       required this.verifiedProfile});
+
+  @override
+  String toString() {
+    return '$firstName $lastName';
+  }
 }
